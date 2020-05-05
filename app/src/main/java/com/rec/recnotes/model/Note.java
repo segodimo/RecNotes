@@ -7,17 +7,12 @@ public class Note implements Serializable {
     private Long id;
 
     private String txtTit;
-    private String txtTag;
     private String txtTxt;
+    private String txtTag;
+    private String txtSubTag;
+    private Long txtScore;
+    private Long txtNivel;
     private String txtDat;
-
-    // public Note(String txtTit, String txtTag, String txtTxt, String txtDat) {
-        // this.txtTit = txtTit;
-        // this.txtTag = txtTag;
-        // this.txtTxt = txtTxt;
-        // this.txtDat = txtDat;
-    // }
-
 
     public Long getId() {
         return id;
@@ -57,5 +52,29 @@ public class Note implements Serializable {
 
     public void setTxtDat(String txtDat) {
         this.txtDat = txtDat;
+    }
+
+    public String getTxtSubTag() {
+        return txtSubTag;
+    }
+
+    public void setTxtSubTag(String txtSubTag) {
+        this.txtSubTag = txtSubTag;
+    }
+
+    public Long getTxtScore() {
+        return txtScore;
+    }
+
+    public void setTxtScore(Long txtScore) {
+        this.txtScore = txtScore;
+    }
+
+    public Long getTxtNivel() {
+        return txtNivel;
+    }
+
+    public void setTxtNivel(Long txtNivel) {
+        this.txtNivel = txtNivel;
     }
 }

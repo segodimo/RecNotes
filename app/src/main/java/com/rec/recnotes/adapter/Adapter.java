@@ -40,9 +40,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
         Note note = listaNotes.get( position );
 
+        holder.txtId.setText(note.getId().toString());
         holder.txtTit.setText(note.getTxtTit());
-        holder.txtTag.setText(note.getTxtTag());
         holder.txtTxt.setText(note.getTxtTxt());
+        holder.txtTag.setText(note.getTxtTag());
+        holder.txtSubTag.setText(note.getTxtSubTag());
+        holder.txtScore.setText(note.getTxtScore().toString());
+        holder.txtNivel.setText(note.getTxtNivel().toString());
         holder.txtDat.setText(note.getTxtDat());
     }
 
@@ -53,17 +57,25 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
+        TextView txtId;
         TextView txtTit;
-        TextView txtTag;
         TextView txtTxt;
+        TextView txtTag;
+        TextView txtSubTag;
+        TextView txtScore;
+        TextView txtNivel;
         TextView txtDat;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            txtId = itemView.findViewById(R.id.txtId);
             txtTit = itemView.findViewById(R.id.txtTit);
-            txtTag = itemView.findViewById(R.id.txtTag);
             txtTxt = itemView.findViewById(R.id.txtTxt);
+            txtTag = itemView.findViewById(R.id.txtTag);
+            txtSubTag = itemView.findViewById(R.id.txtSubTag);
+            txtScore = itemView.findViewById(R.id.txtScore);
+            txtNivel = itemView.findViewById(R.id.txtNivel);
             txtDat = itemView.findViewById(R.id.txtDat);
         }
     }

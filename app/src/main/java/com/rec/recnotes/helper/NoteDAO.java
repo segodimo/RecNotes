@@ -32,6 +32,9 @@ public class NoteDAO implements INoteDAO {
         cv.put("titulo", note.getTxtTit());
         cv.put("texto", note.getTxtTxt());
         cv.put("tag", note.getTxtTag());
+        cv.put("subtag", note.getTxtSubTag());
+        cv.put("score", note.getTxtScore());
+        cv.put("nivel", note.getTxtNivel());
         cv.put("datatime", note.getTxtDat());
         try{
             write.insert(DBHelper.TABELA_DDS, null, cv);
@@ -49,6 +52,9 @@ public class NoteDAO implements INoteDAO {
         cv.put("titulo", note.getTxtTit());
         cv.put("texto", note.getTxtTxt());
         cv.put("tag", note.getTxtTag());
+        cv.put("subtag", note.getTxtSubTag());
+        cv.put("score", note.getTxtScore());
+        cv.put("nivel", note.getTxtNivel());
         cv.put("datatime", note.getTxtDat());
         try{
             String[] args = {note.getId().toString()};
@@ -96,10 +102,12 @@ public class NoteDAO implements INoteDAO {
         List<Note> notes = new ArrayList<>();
 
         //String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag != 'vx' ;";
-        String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE NOT tag LIKE '@@%' ORDER BY tag ASC, texto ASC;";
+        //String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE NOT tag LIKE '@@%' ORDER BY tag ASC, texto ASC;";
+        String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE NOT tag LIKE '@@%' ORDER BY datatime DESC;";
 
         if (io && flt.equals("")){
-            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY tag ASC, texto ASC;";
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY tag ASC, texto ASC;";
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY datatime DESC;";
         }
         else if(io && flt.equals("##")){
             sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY titulo ASC ;";
@@ -132,12 +140,29 @@ public class NoteDAO implements INoteDAO {
                 String titulo = cursor.getString(1);
                 String texto = cursor.getString(2);
                 String tag = cursor.getString(3);
-                String datatime = cursor.getString(4);
+                String subtag = cursor.getString(4);
+                long score = cursor.getLong(5);
+                long nivel = cursor.getLong(6);
+                String datatime = cursor.getString(7);
+
+
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++");
+                System.out.println(cursor.getLong(0) + " 0\n"+
+                        cursor.getString(1) + " 1\n"+
+                        cursor.getString(2) + " 2\n"+
+                        cursor.getString(3) + " 3\n"+
+                        cursor.getString(4) + " 4\n"+
+                        cursor.getString(5) + " 5\n"+
+                        cursor.getString(6) + " 6");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++");
 
                 note.setId(id);
                 note.setTxtTit(titulo);
                 note.setTxtTxt(texto);
                 note.setTxtTag(tag);
+                note.setTxtSubTag(subtag);
+                note.setTxtScore(score);
+                note.setTxtNivel(nivel);
                 note.setTxtDat(datatime);
 
                 notes.add(note);

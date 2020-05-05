@@ -33,8 +33,11 @@ public class EditionActivity extends AppCompatActivity {
 
     private TextView txtId;
     private EditText txtTit;
-    private EditText txtTag;
     private EditText txtTxt;
+    private EditText txtTag;
+    private EditText txtSubTag;
+    private EditText txtScore;
+    private EditText txtNivel;
     private TextView txtDat;
     private FloatingActionButton btnSalva;
     private Note noteAtual;
@@ -50,14 +53,17 @@ public class EditionActivity extends AppCompatActivity {
         txtTit = findViewById(R.id.txtTit);
         txtTxt = findViewById(R.id.txtTxt);
         txtTag = findViewById(R.id.txtTag);
+        txtSubTag = findViewById(R.id.txtSubTag);
+        txtScore = findViewById(R.id.txtScore);
+        txtNivel = findViewById(R.id.txtNivel);
         txtDat = findViewById(R.id.txtDat);
         btnSalva = findViewById(R.id.btnSalva);
         cnstrntLayout = findViewById(R.id.cnstrntLayout);
 
 
-        Random rnd = new Random();
-        int color = Color.argb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        findViewById(android.R.id.content).setBackgroundColor(color);
+//        Random rnd = new Random();
+//        int color = Color.argb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+//        findViewById(android.R.id.content).setBackgroundColor(color);
 
         //Recuperar Dados Enviados
         Bundle dds = getIntent().getExtras();
@@ -66,17 +72,21 @@ public class EditionActivity extends AppCompatActivity {
 
         if (ddsisNote) {
             int ddsNoteId = dds.getInt("noteId");
-            //readDDS(ddsNoteId+1);
             //txtId.setText(String.valueOf(ddsNoteId+1));
 
             //Recuperando Note
             noteAtual = (Note) getIntent().getSerializableExtra("selectNote");
 
+            txtId.setText(noteAtual.getId().toString());
             txtTit.setText(noteAtual.getTxtTit());
             txtTxt.setText(noteAtual.getTxtTxt());
             txtTag.setText(noteAtual.getTxtTag());
+            txtSubTag.setText(noteAtual.getTxtSubTag());
+            txtScore.setText(noteAtual.getTxtScore().toString());
+            txtNivel.setText(noteAtual.getTxtNivel().toString());
             txtDat.setText(noteAtual.getTxtDat());
-            txtId.setText(noteAtual.getId().toString());
+
+            System.out.println(">>>>"+noteAtual.getId().toString());
 
         } else {
             // Paste ClipBoard
@@ -98,11 +108,17 @@ public class EditionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                long txtGetScore = 0;
+                long txtGetNivel = 0;
+
                 NoteDAO noteDAO = new NoteDAO(getApplicationContext());
 
                 String txtGetTit = txtTit.getText().toString();
                 String txtGetTxt = txtTxt.getText().toString();
                 String txtGetTag = txtTag.getText().toString();
+                String txtGetSubTag = txtSubTag.getText().toString();
+//                txtGetScore = Integer.parseInt(txtScore.getText().toString());
+//                txtGetNivel = Integer.parseInt(txtNivel.getText().toString());
 
                 Bundle dds = getIntent().getExtras();
                 Boolean ddsisNote = dds.getBoolean("isnote");
@@ -141,12 +157,13 @@ public class EditionActivity extends AppCompatActivity {
                         //Fazer Update de Dados
                         //
                         // btnSalva.setVisibility(View.INVISIBLE);
-                        updateDDS(txtGetTit, txtGetTxt, txtGetTag);
+                        updateDDS(txtGetTit, txtGetTxt, txtGetTag, txtGetSubTag, txtGetScore, txtGetNivel);
 
                         finish();
                     } else {
                         // Paste ClipBoard
-                        createDDS(txtGetTit, txtGetTxt, txtGetTag);
+                        createDDS(txtGetTit, txtGetTxt, txtGetTag, txtGetSubTag, txtGetScore, txtGetNivel);
+                        //Toast.makeText(EditionActivity.this, txtGetSubTag+"okokok", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -202,6 +219,7 @@ public class EditionActivity extends AppCompatActivity {
             ioVer = preferences.getBoolean("ioverfiltro", false);
             if(ioVer)
                 txtTag.setText("@@");
+                txtNivel.setText("5");
         }
 
 
@@ -268,93 +286,58 @@ public class EditionActivity extends AppCompatActivity {
     }
 
     //CRUD
-
-    public void readDDS(int num_id) {
-        //RECUPERAR DADOS
-
-        try {
-            SQLiteDatabase db = openOrCreateDatabase("REC_NOTES_01", MODE_PRIVATE, null);
-
-            String query = "SELECT * FROM dds_tabela WHERE id = " + num_id;
-            //String query = "SELECT * FROM dds_tabela ";
-            Cursor cursor = db.rawQuery(query, null);
-
-            if (cursor.moveToFirst()) {
-                do {
-//                    System.out.println("xoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxo");
-//                    System.out.println(cursor.getString(0));
-//                    System.out.println(cursor.getString(1));
-//                    System.out.println(cursor.getString(2));
-//                    System.out.println(cursor.getString(3));
-//                    System.out.println(cursor.getString(4));
-//                    System.out.println("xoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxo");
-
-                    txtTit.setText(cursor.getString(1));
-                    txtTxt.setText(cursor.getString(2));
-                    txtTag.setText(cursor.getString(3));
-                    txtDat.setText(cursor.getString(4));
-
-                } while (cursor.moveToNext());
-            }
-
-
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "PROBLEMAS...", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-    }
-
-    public void createDDS(String txtGetTit, String txtGetTxt, String txtGetTag) {
+    public void createDDS(String txtGetTit, String txtGetTxt, String txtGetTag, String txtGetSubTag, long txtGetScore, long txtGetNivel) {
 
         try {
 
             // DAO Data Access Object
             NoteDAO noteDAO = new NoteDAO(getApplicationContext());
 
-            //iNSTANCIAR NOTE
-            //Note note = new Note();
-            //Note note = new Note("titulo 1111", "tag 11", "okokokokokokokokoko 11111111","DD:MM:AA 1111");
             Note note = new Note();
 
             note.setTxtTit(txtGetTit);
             note.setTxtTxt(txtGetTxt);
             note.setTxtTag(txtGetTag);
+            note.setTxtSubTag(txtGetSubTag);
+            note.setTxtScore(txtGetScore);
+            note.setTxtNivel(txtGetNivel);
             note.setTxtDat(getDateTime());
 
             noteDAO.createNt(note);
 
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            assert clipboard != null;
-            clipboard.setText("");
-
+            boolean ouvinteIO = false;
+            SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
+            if (preferences.contains("ouvinteIO")) {
+                ouvinteIO = preferences.getBoolean("ouvinteIO", false);
+                if(!ouvinteIO) {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    assert clipboard != null;
+                    clipboard.setText("");
+                }
+            }
             finish();
-
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "PROBLEMAS...", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
-
     //Atualizar no DB
-    public void updateDDS(String txtGetTit, String txtGetTxt, String txtGetTag) {
-
+    public void updateDDS(String txtGetTit, String txtGetTxt, String txtGetTag, String txtGetSubTag, long txtGetScore, long txtGetNivel) {
         try {
-
             // DAO Data Access Object
             NoteDAO noteDAO = new NoteDAO(getApplicationContext());
-
             Note note = new Note();
             note.setTxtTit(txtGetTit);
             note.setTxtTxt(txtGetTxt);
             note.setTxtTag(txtGetTag);
+            note.setTxtSubTag(txtGetSubTag);
+            note.setTxtScore(txtGetScore);
+            note.setTxtNivel(txtGetNivel);
             note.setTxtDat(getDateTime());
             note.setId(noteAtual.getId());
-
             //noteDAO.createNt(note);
             noteDAO.updateNt(note);
-
             finish();
-
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "PROBLEMAS...", Toast.LENGTH_SHORT).show();
             e.printStackTrace();

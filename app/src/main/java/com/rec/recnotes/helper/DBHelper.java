@@ -19,18 +19,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        String sql = "CREATE TABLE IF NOT EXISTS dds_tabela ( " +
-//                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                "titulo TEXT NOT NULL, " +
-//                "texto TEXT NOT NULL, " +
-//                "tag TEXT NOT NULL, " +
-//                "datatime DATETIME DEFAULT CURRENT_TIMESTAMP) ";
+
         String sql = "CREATE TABLE IF NOT EXISTS "+TABELA_DDS+" ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "titulo TEXT NOT NULL, " +
                 "texto TEXT NOT NULL, " +
-                "tag TEXT NOT NULL, " +
-                "datatime DATETIME DEFAULT CURRENT_TIMESTAMP) ";
+                "tag TEXT, " +
+                "subtag TEXT, " +
+                "score INTEGER, " +
+                "nivel INTEGER, " +
+                "datatime DATETIME DEFAULT CURRENT_TIMESTAMP ) ";
 
         try{
             db.execSQL( sql );

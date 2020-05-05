@@ -146,13 +146,16 @@ public class MainActivity extends AppCompatActivity {
         String sTit = "";
         String sTxt = "";
         String sTag = "";
+        long sNiv = 0;
 
         boolean ioVer = false;
         SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
         if (preferences.contains("ioverfiltro")) {
             ioVer = preferences.getBoolean("ioverfiltro", false);
-            if(ioVer)
+            if(ioVer){
                 sTag="@@";
+                sNiv = 5;
+            }
         }
 
 
@@ -160,11 +163,11 @@ public class MainActivity extends AppCompatActivity {
         if (verTxt.length() > lmtTit) {
             sTit = verTxt.substring(0, lmtTit) + "...";
             sTxt = verTxt;
-            createDDS(sTit, sTxt, sTag);
+            createDDS(sTit, sTxt, sTag, sNiv);
         } else {
             sTit = verTxt;
             sTxt = verTxt;
-            createDDS(sTit, sTxt, sTag);
+            createDDS(sTit, sTxt, sTag, sNiv);
         }
     }
 
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         return dateFormat.format(date);
     }
 
-    public void createDDS(String txtGetTit, String txtGetTxt, String txtGetTag) {
+    public void createDDS(String txtGetTit, String txtGetTxt, String txtGetTag, long txtGetNivel) {
 
        try {
            // DAO Data Access Object
@@ -184,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
            note.setTxtTit(txtGetTit);
            note.setTxtTxt(txtGetTxt);
            note.setTxtTag(txtGetTag);
+           note.setTxtNivel(txtGetNivel);
            note.setTxtDat(getDateTime());
            noteDAO.createNt(note);
 

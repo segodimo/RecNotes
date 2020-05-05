@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="8"
             android:text="Titulo"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/txtTag"
@@ -30,7 +31,47 @@
             android:text="Tag"
             android:textAlignment="textEnd"
             android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/txtSubTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sub-Tag"
+            android:textAlignment="textEnd"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/txtScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Score"
+            android:textAlignment="textEnd"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/txtNivel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nivel"
+            android:textAlignment="textEnd"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/txtId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="id"
+            android:textAlignment="textEnd"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp" />
     </LinearLayout>
 
     <TextView
@@ -38,7 +79,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Texto"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/txtDat"
@@ -46,5 +88,5 @@
         android:layout_height="wrap_content"
         android:text="DataTime"
         android:textColor="#FFFFFF"
-        android:textSize="12sp" />
+        android:textSize="8sp" />
 </LinearLayout>
