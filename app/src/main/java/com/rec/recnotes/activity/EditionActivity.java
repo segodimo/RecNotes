@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.rec.recnotes.R;
 import com.rec.recnotes.helper.NoteDAO;
 import com.rec.recnotes.model.Note;
@@ -37,12 +39,14 @@ public class EditionActivity extends AppCompatActivity {
     private EditText txtTag;
     private EditText txtSubTag;
     private EditText txtScore;
+    private TextInputLayout lynivel;
     private EditText txtNivel;
     private TextView txtDat;
     private FloatingActionButton btnSalva;
     private Note noteAtual;
     private static final String ARQUIVO_PREFERENCIAS = "ArquivoPreferencias";
     private ConstraintLayout cnstrntLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,7 @@ public class EditionActivity extends AppCompatActivity {
         txtTag = findViewById(R.id.txtTag);
         txtSubTag = findViewById(R.id.txtSubTag);
         txtScore = findViewById(R.id.txtScore);
+        lynivel = findViewById(R.id.lynivel);
         txtNivel = findViewById(R.id.txtNivel);
         txtDat = findViewById(R.id.txtDat);
         btnSalva = findViewById(R.id.btnSalva);
@@ -64,6 +69,20 @@ public class EditionActivity extends AppCompatActivity {
 //        Random rnd = new Random();
 //        int color = Color.argb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
 //        findViewById(android.R.id.content).setBackgroundColor(color);
+
+        boolean ioVer = false;
+        SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
+        if (preferences.contains("ioverfiltro")) {
+            ioVer = preferences.getBoolean("ioverfiltro", false);
+            if(ioVer){
+                txtTag.setText("@@");
+                txtNivel.setText("5");
+            }else{
+                lynivel.setVisibility(View.INVISIBLE);
+                //txtNivel.setVisibility(View.INVISIBLE);
+            }
+        }
+
 
         //Recuperar Dados Enviados
         Bundle dds = getIntent().getExtras();
@@ -117,8 +136,8 @@ public class EditionActivity extends AppCompatActivity {
                 String txtGetTxt = txtTxt.getText().toString();
                 String txtGetTag = txtTag.getText().toString();
                 String txtGetSubTag = txtSubTag.getText().toString();
-//                txtGetScore = Integer.parseInt(txtScore.getText().toString());
-//                txtGetNivel = Integer.parseInt(txtNivel.getText().toString());
+                txtGetScore = strtoint(txtScore.getText().toString());
+                txtGetNivel = strtoint(txtNivel.getText().toString());
 
                 Bundle dds = getIntent().getExtras();
                 Boolean ddsisNote = dds.getBoolean("isnote");
@@ -126,33 +145,56 @@ public class EditionActivity extends AppCompatActivity {
 
                 //Toast.makeText(getApplicationContext(), txtGetTag+" !!", Toast.LENGTH_SHORT).show();
 
-                if (txtGetTag.equals("@@@") && txtGetTxt.equals("")) {
-                    ioSwitchFiltro(true,"",false, false);
-                } else if (txtGetTag.equals("@@@") && !txtGetTxt.equals("")) {
-                    ioSwitchFiltro(true,txtGetTxt,false, false);
-                } else if (txtGetTag.equals("@@@") && !txtGetTxt.equals("##")) {
-                    ioSwitchFiltro(true,"##",false, false);
-                } else if (txtGetTag.equals("@@@@") && txtGetTag.equals("&&")) {
-                    ioSwitchFiltro(true,"&&",false, false);
-                } else if (txtGetTag.equals("@@@@") && txtGetTag.equals("$$")) {
-                    ioSwitchFiltro(true,"$$",false, false);
-                } else if (txtGetTxt.equals("??")) {
-                    fltFiltro(txtGetTag);
-                } else if (txtGetTag.equals("@@++")) {
-                    ioSwitchFiltro(true,"",true, false);
-                } else if (txtGetTag.equals("@@##")) {
-                    ioSwitchFiltro(true,"",false, true);
-                } else if (txtGetTag.equals("+++")) {
-                    ioSwitchFiltro(false,"",true, false);
-                } else if (txtGetTag.equals("#+++")) {
-                    ioSwitchFiltro(false,"",false, true);
-                } else if (txtGetTag.equals("//")) {
-                    ioSwitchFiltro(false,"",false, false);
-                } else if (txtGetTag.equals("£===")) {
+                if (txtGetTag.equals("@@@") && txtGetTxt.equals("")) ioSwitchFiltro(true,"","",false, false);
+
+
+                else if (txtGetTag.equals("@@@##")){
+                    ioSwitchFiltro(true,"##","",false, false);
+                    Toast.makeText(EditionActivity.this, "tit", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (txtGetTag.equals("@@@$$")){
+                    ioSwitchFiltro(true,"$$","",false, false);
+                    Toast.makeText(EditionActivity.this, "txt", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (txtGetTag.equals("@@@__")){
+                    ioSwitchFiltro(true,"__","",false, false);
+                    Toast.makeText(EditionActivity.this, "tag", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (txtGetTag.equals("@@@&&")){
+                    ioSwitchFiltro(true,"&&","",false, false);
+                    Toast.makeText(EditionActivity.this, "subtag", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (txtGetTag.equals("@@@--")){
+                    ioSwitchFiltro(true,"--","",false, false);
+                    Toast.makeText(EditionActivity.this, "score", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (txtGetTag.equals("@@@??")) ioSwitchFiltro(true,"??",txtGetSubTag,false, false);
+                //else if (txtGetTag.equals("@@@") && txtGetSubTag.equals("??")) fltFiltro(txtGetSubTag);
+
+                else if (txtGetTag.equals("@@##")) ioSwitchFiltro(true,"","",true, false);
+                else if (txtGetTag.equals("@@++")) ioSwitchFiltro(true,"","",false, true);
+
+                else if (txtGetTag.equals("+++")) {
+                    ioSwitchFiltro(false,"","",true, false);
+                }
+                else if (txtGetTag.equals("#+++")) {
+                    ioSwitchFiltro(false,"","",false, true);
+                }
+                else if (txtGetTag.equals("//")) {
+                    ioSwitchFiltro(false,"","",false, false);
+                }
+                else if (txtGetTag.equals("£===")) {
                     deletTab();
-                } else if (txtGetTag.equals(",,,")) {
+                }
+                else if (txtGetTag.equals(",,,")) {
                     dbToTxt();
-                } else {
+                }
+                else {
                     if (ddsisNote) {
                         //Fazer Update de Dados
                         //
@@ -162,9 +204,13 @@ public class EditionActivity extends AppCompatActivity {
                         finish();
                     } else {
                         // Paste ClipBoard
-                        createDDS(txtGetTit, txtGetTxt, txtGetTag, txtGetSubTag, txtGetScore, txtGetNivel);
-                        //Toast.makeText(EditionActivity.this, txtGetSubTag+"okokok", Toast.LENGTH_SHORT).show();
-
+                        // txtGetTag.substring(0, 1).equals("@@")
+                        if (txtGetTxt.equals("") && txtGetTag.equals("")) {
+                            Toast.makeText(EditionActivity.this, "txt!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            createDDS(txtGetTit, txtGetTxt, txtGetTag, txtGetSubTag, txtGetScore, txtGetNivel);
+                        }
+                        /*Toast.makeText(EditionActivity.this, txtGetSubTag+"okokok", Toast.LENGTH_SHORT).show();*/
                     }
                 }
             }
@@ -172,6 +218,11 @@ public class EditionActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public long strtoint(String str){
+        try { return Integer.parseInt(str); }
+        catch (NumberFormatException e) { return 0; }
     }
 
     public void deletTab(){
@@ -187,19 +238,20 @@ public class EditionActivity extends AppCompatActivity {
         finish();
     }
 
-    public void fltFiltro(String flt) {
+    public void fltFiltro(String txtflt) {
         SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("fltfiltro", flt);
+        editor.putString("txtfltfiltro", txtflt);
         editor.commit();
         finish();
     }
 
-    public void ioSwitchFiltro(boolean io, String flt, boolean ioauto, boolean iocpoy) {
+    public void ioSwitchFiltro(boolean io, String flt, String txtflt, boolean ioauto, boolean iocpoy) {
         SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("ioverfiltro", io);
         editor.putString("fltfiltro", flt);
+        editor.putString("txtfltfiltro", txtflt);
         editor.putBoolean("ouvinteIO", ioauto);
         editor.putBoolean("autoCopyIO", iocpoy);
         editor.commit();
@@ -213,14 +265,15 @@ public class EditionActivity extends AppCompatActivity {
 
     public void imprimeTxt(String verTxt) {
 
-        boolean ioVer = false;
-        SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
-        if (preferences.contains("ioverfiltro")) {
-            ioVer = preferences.getBoolean("ioverfiltro", false);
-            if(ioVer)
-                txtTag.setText("@@");
-                txtNivel.setText("5");
-        }
+//        boolean ioVer = false;
+//        SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
+//        if (preferences.contains("ioverfiltro")) {
+//            ioVer = preferences.getBoolean("ioverfiltro", false);
+//            if(ioVer){
+//                txtTag.setText("@@");
+//                txtNivel.setText("5");
+//            }
+//        }
 
 
         int lmtTit = 30;

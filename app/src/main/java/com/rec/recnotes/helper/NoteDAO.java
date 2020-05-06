@@ -97,30 +97,52 @@ public class NoteDAO implements INoteDAO {
     }
 
     @Override
-    public List<Note> listar(boolean io, String flt) {
+    public List<Note> listar(boolean io, String flt, String txtflt) {
 
         List<Note> notes = new ArrayList<>();
 
+        System.out.println("txtflt: "+txtflt+" flt: "+flt);
+
         //String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag != 'vx' ;";
         //String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE NOT tag LIKE '@@%' ORDER BY tag ASC, texto ASC;";
-        String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE NOT tag LIKE '@@%' ORDER BY datatime DESC;";
+        //String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE NOT tag LIKE '@@%' ORDER BY datatime DESC;";
+        String sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel != 5 ORDER BY datatime DESC;";
 
         if (io && flt.equals("")){
             //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY tag ASC, texto ASC;";
-            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY datatime DESC;";
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY datatime DESC;";
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 ORDER BY datatime DESC;";
         }
+
         else if(io && flt.equals("##")){
-            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY titulo ASC ;";
-        }
-        else if(io && flt.equals("&&")){
-            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY texto ASC ;";
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 ORDER BY titulo ASC ;";
         }
         else if(io && flt.equals("$$")){
-            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag LIKE + '%@@%' ORDER BY datatime DESC ;";
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag LIKE + '%@@%' ORDER BY datatime DESC ;";
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 ORDER BY texto ASC ;";
         }
-        else if(io && !flt.equals("")){
-            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag LIKE + '@@"+flt+"%' ORDER BY tag ASC, texto ASC ;";
+        else if(io && flt.equals("__")){
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 ORDER BY tag ASC ;";
         }
+        else if(io && flt.equals("&&")){
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 ORDER BY subtag ASC ;";
+        }
+        else if(io && flt.equals("--")){
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 ORDER BY score DESC ;";
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " ORDER BY score DESC ;";
+        }
+
+        else if(io && flt.equals("??")){
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 AND tag LIKE '%"+txtflt+"%' ORDER BY score ASC ;";
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 AND texto LIKE '%"+txtflt+"%' ORDER BY score ASC ;";
+            //sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE texto LIKE '%"+txtflt+"%' ORDER BY texto ASC ;";
+            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE nivel = 5 AND texto LIKE '%"+txtflt+"%' ORDER BY texto ASC;";
+        }
+
+//        else if(io && !flt.equals("")){
+//            sql = "SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag LIKE + '@@"+flt+"%' ORDER BY tag ASC, texto ASC ;";
+//        }
+
         //ABERTO
         else if(!io && !flt.equals("")){
             //sql = "SELECT * FROM (SELECT * FROM " + DBHelper.TABELA_DDS + " WHERE tag LIKE 'ccc%') WHERE NOT tag LIKE '@@%' ;";
@@ -146,15 +168,15 @@ public class NoteDAO implements INoteDAO {
                 String datatime = cursor.getString(7);
 
 
-                System.out.println("+++++++++++++++++++++++++++++++++++++++++");
-                System.out.println(cursor.getLong(0) + " 0\n"+
-                        cursor.getString(1) + " 1\n"+
-                        cursor.getString(2) + " 2\n"+
-                        cursor.getString(3) + " 3\n"+
-                        cursor.getString(4) + " 4\n"+
-                        cursor.getString(5) + " 5\n"+
-                        cursor.getString(6) + " 6");
-                System.out.println("+++++++++++++++++++++++++++++++++++++++++");
+//                System.out.println("+++++++++++++++++++++++++++++++++++++++++");
+//                System.out.println(cursor.getLong(0) + " 0\n"+
+//                        cursor.getString(1) + " 1\n"+
+//                        cursor.getString(2) + " 2\n"+
+//                        cursor.getString(3) + " 3\n"+
+//                        cursor.getString(4) + " 4\n"+
+//                        cursor.getString(5) + " 5\n"+
+//                        cursor.getString(6) + " 6");
+//                System.out.println("+++++++++++++++++++++++++++++++++++++++++");
 
                 note.setId(id);
                 note.setTxtTit(titulo);

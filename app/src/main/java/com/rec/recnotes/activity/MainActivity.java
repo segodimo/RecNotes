@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new Adapter(listaNotes);
         btnPlus = findViewById(R.id.btnPlus);
         ioSwitchFiltro(false, false, false);
-        Toast.makeText(this, "...", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "...", Toast.LENGTH_SHORT).show();
         ouvinteClipBoard();
         swip();
 
@@ -345,17 +345,19 @@ public class MainActivity extends AppCompatActivity {
 
         boolean ioVer = false;
         String flt = "";
+        String txtflt = "";
         SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
         if (preferences.contains("ioverfiltro")) {
             ioVer = preferences.getBoolean("ioverfiltro", false);
             flt = preferences.getString("fltfiltro", "");
-            //Toast.makeText(getApplicationContext(), "ioverfiltro "+ioVer, Toast.LENGTH_SHORT).show();
+            txtflt = preferences.getString("txtfltfiltro", "");
+            //Toast.makeText(getApplicationContext(), "txtflt "+txtflt, Toast.LENGTH_SHORT).show();
         }
 
 
         NoteDAO noteDAO = new NoteDAO(getApplicationContext());
         //listaNotes = noteDAO.listar(ioVer, "");
-        listaNotes = noteDAO.listar(ioVer, flt);
+        listaNotes = noteDAO.listar(ioVer, flt, txtflt);
 
         // Configurar Adapter
         Adapter adapter = new Adapter(listaNotes);
@@ -373,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(ARQUIVO_PREFERENCIAS, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("ioverfiltro", io);
-        //editor.putString("fltfiltro", "");
+        editor.putString("fltfiltro", "");
         editor.putBoolean("ouvinteIO", ioauto);
         editor.putBoolean("autoCopyIO", iocpoy);
         editor.commit();

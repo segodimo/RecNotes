@@ -78,7 +78,8 @@ public class DbToTxt extends AppCompatActivity {
 
     }
 
-    public void importDDS(String txtGetTit, String txtGetTxt, String txtGetTag, String txtGetDat) {
+    //public void createDDS(String txtGetTit, String txtGetTxt, String txtGetTag, String txtGetSubTag, long txtGetScore, long txtGetNivel) {
+    public void importDDS(String txtGetTit, String txtGetTxt, String txtGetTag, String txtGetSubTag, long txtGetScore, long txtGetNivel, String txtGetDat) {
 
         try {
 
@@ -90,10 +91,19 @@ public class DbToTxt extends AppCompatActivity {
             //Note note = new Note("titulo 1111", "tag 11", "okokokokokokokokoko 11111111","DD:MM:AA 1111");
             Note note = new Note();
 
+//            note.setTxtTit(txtGetTit);
+//            note.setTxtTxt(txtGetTxt);
+//            note.setTxtTag(txtGetTag);
+//            note.setTxtDat(txtGetDat);
+
             note.setTxtTit(txtGetTit);
             note.setTxtTxt(txtGetTxt);
             note.setTxtTag(txtGetTag);
+            note.setTxtSubTag(txtGetSubTag);
+            note.setTxtScore(txtGetScore);
+            note.setTxtNivel(txtGetNivel);
             note.setTxtDat(txtGetDat);
+
 
             noteDAO.createNt(note);
 
@@ -102,6 +112,19 @@ public class DbToTxt extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "PROBLEMAS...", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+    }
+
+    public static String getCampoString(String[] linha, int coluna) {
+        if (coluna < linha.length)
+            return linha[coluna];
+        return "";
+    }
+
+    public static Integer getCampoInteger(String[] linha, int coluna) {
+        final String str = getCampoString(linha, coluna);
+        if (str.equals(""))
+            return 0;
+        return Integer.parseInt(str);
     }
 
     private void importDb(){
@@ -127,8 +150,12 @@ public class DbToTxt extends AppCompatActivity {
                 String txtDat = linha[1];
                 String txtTxt = linha[2].replace("/*/", "\n");
                 String txtTit = linha[3];
-                String txtTag = linha[4];
-                importDDS(txtTit, txtTxt, txtTag, txtDat);
+                //String txtTag = linha[4];
+                String txtTag = getCampoString(linha, 4);
+                String txtSubTag = getCampoString(linha, 5);
+                long txtScore = getCampoInteger(linha, 6);
+                long txtNivel = getCampoInteger(linha, 7);
+                importDDS(txtTit, txtTxt, txtTag, txtSubTag, txtScore, txtNivel, txtDat);
                 buff += data;
 
             }
@@ -159,7 +186,7 @@ public class DbToTxt extends AppCompatActivity {
     private void saveDb(){
 
         NoteDAO noteDAO = new NoteDAO(getApplicationContext());
-        listaNotes = noteDAO.listar(true,"");
+        listaNotes = noteDAO.listar(true,"","");
 
         String listString = "";
 
@@ -170,7 +197,10 @@ public class DbToTxt extends AppCompatActivity {
             listString += s.getTxtDat() + "|";
             listString += txtbkln + "|";
             listString += titbkln + "|";
-            listString += s.getTxtTag() + "|\n";
+            listString += s.getTxtTag() + "|";
+            listString += s.getTxtSubTag() + "|";
+            listString += s.getTxtScore() + "|";
+            listString += s.getTxtNivel() + "|\n";
         }
 
 //        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");

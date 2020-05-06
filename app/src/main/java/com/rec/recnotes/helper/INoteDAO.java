@@ -10,5 +10,5 @@ public interface INoteDAO {
     public boolean updateNt(Note note);
     public boolean deleteNt(Note note);
     public boolean deleteTab();
-    public List<Note> listar(boolean io, String flt);
+    public List<Note> listar(boolean io, String flt, String txtflt);
 }
